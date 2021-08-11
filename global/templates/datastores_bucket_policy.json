@@ -1,0 +1,68 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowRootAndHomeListing",
+      "Principal": {
+        "AWS": [
+          "${principals}"
+        ]
+      },
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::irsch-${env}-datastores"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "s3:prefix": [
+            "",
+            "attachments/",
+            "bdrscontent/*"
+          ],
+          "s3:delimiter": [
+            "/"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "AllowListingOfFolder",
+      "Principal": {
+        "AWS": [
+          "${principals}"
+        ]
+      },
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::irsch-${env}-datastores"
+      ],
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": [
+            "attachments/*","bdrscontent/*"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "AllowS3ActionsInFolder",
+      "Principal": {
+        "AWS": [
+          "${principals}"
+        ]
+      },
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": [
+        "arn:aws:s3:::irsch-${env}-datastores/attachments/*",
+        "arn:aws:s3:::irsch-${env}-datastores/bdrscontent/*"
+      ]
+    }
+  ]
+}

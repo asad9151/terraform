@@ -1,0 +1,21 @@
+{
+  "Version": "2012-10-17",
+  "Id": "UnityTeamAccess",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "${principals}"
+        ]
+      },
+      "Action": [
+        "sqs:DeleteMessage",
+        "sqs:ReceiveMessage",
+        "sqs:SendMessage",
+        "sqs:GetQueueAttributes"
+      ],
+      "Resource": "${resource_queue_arn}"
+    }
+  ]
+}

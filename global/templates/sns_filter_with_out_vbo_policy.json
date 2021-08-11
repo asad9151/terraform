@@ -1,0 +1,8 @@
+{
+  "requestMethodCode": [
+    ${requestMethodCode}
+  ],
+  "notificationTypeCode": [
+    ${notificationTypeCode}
+  ]
+}

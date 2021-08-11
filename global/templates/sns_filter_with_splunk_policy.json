@@ -1,0 +1,8 @@
+{
+  "notificationTypeCode": [
+    ${notificationTypeCode}
+  ],
+  "sendToSplunk": [
+    ${sendToSplunk}
+  ]
+}

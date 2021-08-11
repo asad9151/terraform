@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "SQS:*",
+      "Resource": "${resource_queue_arn}",
+      "Condition": {
+        "ArnEquals": {
+          "aws:SourceArn": "${source_sns_arn}"
+        }
+      }
+    }
+  ]
+}

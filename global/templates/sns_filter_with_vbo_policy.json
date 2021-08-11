@@ -1,0 +1,11 @@
+{
+  "requestMethodCode": [
+    ${requestMethodCode}
+  ],
+  "notificationTypeCode": [
+    ${notificationTypeCode}
+  ],
+  "sendToVBO": [
+    ${sendToVBO}
+  ]
+}
