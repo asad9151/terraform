@@ -1,0 +1,13 @@
+name: POC
+title: POC Environment 
+maintainer: Dun & Bradstreet
+copyright: Dun & Bradstreet
+license: Propritary, All rights reserved
+summary: Runs tests for the POC Environment
+version: 1.0.0
+supports:
+  - platform: aws
+depends:
+  - name: inspec-aws
+    url: https://github.com/inspec/inspec-aws/archive/v1.31.0.tar.gz
+inspec_version: "~> 4.22"
