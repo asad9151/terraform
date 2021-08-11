@@ -1,0 +1,1 @@
+The primary purpose of this file is to ensure, the AWS wouldn't delete an empty folder when files are not available. Please do not delete this file unless you know you should

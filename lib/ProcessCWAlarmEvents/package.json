@@ -1,0 +1,16 @@
+{
+  "name": "iresearch",
+  "version": "1.0.0",
+  "description": "iResearch - This is the source code repository for the Columbo investigations project application.",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^6.3.0"
+  }
+}

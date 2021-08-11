@@ -1,0 +1,47 @@
+{
+  "name": "lambda-warmer",
+  "version": "1.2.1",
+  "description": "Keep your Lambda functions warm",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --check-leaks --recursive",
+    "test-cov": "nyc --reporter=lcov mocha --check-leaks --recursive",
+    "test-ci": "nyc npm test && nyc report --reporter=text-lcov | ./node_modules/coveralls/bin/coveralls.js",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremydaly/lambda-warmer.git"
+  },
+  "keywords": [
+    "lambda",
+    "cold start",
+    "aws",
+    "serverless",
+    "cloudwatch ping"
+  ],
+  "author": "Jeremy Daly <jeremy@jeremydaly.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jeremydaly/lambda-warmer/issues"
+  },
+  "homepage": "https://github.com/jeremydaly/lambda-warmer#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.424.0",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.3",
+    "eslint": "^5.15.3",
+    "mocha": "^5.2.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^14.1.1",
+    "rewire": "^4.0.1",
+    "sinon": "^6.3.5"
+  },
+  "files": [
+    "lib/",
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ]
+}
