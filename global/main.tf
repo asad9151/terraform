@@ -3839,7 +3839,7 @@ module "esCaseExtract_domain" {
   enable_authentication       = false
   encrypt_at_rest             = true
   instance_count              = var.env == "pd" ? 2 : 1
-  instance_type               = "t3.medium.elasticsearch"
+  instance_type               = "m5.large.elasticsearch"
   iops                        = 0
   security_group_ids          = module.es_security_group.securityGroup_id
   sns_arn_for_cwMonitor       = module.invokeProcessCWAlarmEventsLambda_sns.arn
@@ -3893,6 +3893,6 @@ module "esCaseExtract_lambda" {
   tracing_config              = "PassThrough"
 
   variables = {
-    "ES_ENDPOINT" = module.es_domain.endpoint
+    "ES_ENDPOINT" = module.esCaseExtract_domain.endpoint
   }
 }
