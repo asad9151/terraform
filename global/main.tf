@@ -3884,7 +3884,7 @@ module "esCaseExtract_lambda" {
   func_handler                = "index.lambda_handler"
   func_name                   = "irsch_${var.env}_esCaseExtract"
   memory                      = var.lambda_properties["3GBLambdaMemory"]
-  payload_filename            = data.archive_file.ProcessCWLogsToES.output_path
+  payload_filename            = "../lib/CaseExtractLambdas.zip"
   runtime                     = var.lambda_properties["python37LambdaRuntime"]
   security_group_ids          = [module.lambda_security_group.securityGroup_id]
   subnets                     = var.lambda_subnets
