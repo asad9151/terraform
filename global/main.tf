@@ -214,6 +214,7 @@ module "lambda_role" {
   cs_api_gw_arn                 = module.gateway-cs.arn
   cs_api_gw_stage_name          = module.gateway-cs.stage
   elasticsearch_name            = module.es_domain.name
+  es_caseExtract_name           = module.esCaseExtract_domain.name
   env                           = var.env
   kms_arn                       = module.kms.arn
   region                        = var.region
@@ -3818,4 +3819,80 @@ module "sendToBDRSDataEntry_queue" {
   create_enable_events     = var.conditional-resources["create_enable_events"]
   name                     = "irsch_${var.env}_sendToBDRSDataEntry"
   tags                     = var.tags
+}
+
+/************************************************************
+Elastic Search Case Extract Domain and the necessary resources
+*************************************************************/
+
+module "esCaseExtract_domain" {
+  source                      = "../modules/elasticsearch"
+  account_id                  = var.account_id
+  cognito_access_iam_role_arn = ""
+  cognito_identity_pool_id    = module.es_kibana_cognito_pool.cognito_identity_pool_id
+  cognito_user_pool_id        = module.es_kibana_cognito_pool.cognito_user_pool_id
+  create_enable_events        = var.conditional-resources["create_enable_events"]
+  create_esDomain             = var.conditional-resources["create_case_extract_domain"]
+  domain_name                 = "irsch-${var.env}-caseExtract-domain"
+  domain_version              = "6.5"
+  ebs_enabled                 = true
+  enable_authentication       = false
+  encrypt_at_rest             = true
+  instance_count              = var.env == "pd" ? 2 : 1
+  instance_type               = "t3.medium.elasticsearch"
+  iops                        = 0
+  security_group_ids          = module.es_security_group.securityGroup_id
+  sns_arn_for_cwMonitor       = module.invokeProcessCWAlarmEventsLambda_sns.arn
+  subnet_ids                  = list(var.lambda_subnets[0])
+  tags                        = var.tags
+  volume_size                 = var.env == "pd" ? 500 : 100
+  volume_type                 = "gp2"
+  //cognito_access_iam_role_arn   = "arn:aws:iam::${var.account_id}:role/service-role/CognitoAccessForAmazonES"
+}
+
+module "esCaseExtract_queue" {
+  source                     = "../modules/sqs"
+  create_enable_events       = var.conditional-resources["create_case_extract_domain"]
+  isLambdaFunction           = true
+  isLambdaTriggerNeeded      = true
+  lambda_function_arn        = module.esCaseExtract_lambda.arn
+  lambda_function_name       = module.esCaseExtract_lambda.funcName
+  name                       = "irsch_${var.env}_esCaseExtract"
+  redrive_policy             = "{\"deadLetterTargetArn\":\"${module.esCaseExtract_dlq_queue.arn}\",\"maxReceiveCount\":5}"
+  tags                       = var.tags
+  visibility_timeout_seconds = module.bdrsResponse_lambda.timeout * 6
+}
+
+module "esCaseExtract_dlq_queue" {
+  source                 = "../modules/sqs"
+  create_enable_events   = var.conditional-resources["create_case_extract_domain"]
+  name                   = "irsch_${var.env}_DLQ_esCaseExtract"
+  sns_name_for_cwMonitor = module.invokeProcessCWAlarmEventsLambda_sns.arn
+  tags                   = var.tags
+}
+
+module "esCaseExtract_lambda" {
+  source                      = "../modules/lambda"
+  concurrency                 = var.lambda_concurrency != -1 ? var.lambda_concurrency * 2 : var.lambda_concurrency
+  create_enable_events        = false
+  create_lambda               = var.conditional-resources["create_case_extract_domain"]
+  create_log_subscription     = false
+  description                 = "Case extract logs are consumed and sent over to ES."
+  enable_keepwarm             = false
+  execution_role_arn          = module.lambda_role.role_arn
+  funcName_that_consume_CWLog = null
+  func_handler                = "index.lambda_handler"
+  func_name                   = "irsch_${var.env}_esCaseExtract"
+  memory                      = var.lambda_properties["3GBLambdaMemory"]
+  payload_filename            = data.archive_file.ProcessCWLogsToES.output_path
+  runtime                     = var.lambda_properties["python37LambdaRuntime"]
+  security_group_ids          = [module.lambda_security_group.securityGroup_id]
+  subnets                     = var.lambda_subnets
+  tags                        = var.tags
+  timeout                     = var.lambda_properties["4MinLambdaTimeout"]
+  tracing_config              = "PassThrough"
+
+  variables = {
+    "ES_ENDPOINT" = module.es_domain.endpoint
+  }
 }

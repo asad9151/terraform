@@ -141,6 +141,7 @@ locals {
 locals {
   conditional_resources = {
     create_es_domain         = contains(list("q1", "q2", "pd"), var.env) ? true : false
+    create_case_extract_domain = contains(list("q1", "q2", "pd"), var.env) ? true : false
     create_log_subscription  = contains(list("dr", "dev1", "dev2", "dev3"), var.env) ? false : true
     //create_db_param_group    = contains(list("dev2", "q1", "pd", "dr"), var.env) ? true : false
     create_db_subnet_group   = contains(list("dev2","dr"), var.env) ? true : false
