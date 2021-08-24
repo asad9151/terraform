@@ -1062,6 +1062,15 @@ module "cloudfront_testui" {
   tags                = var.tags
 }
 
+/******************************************************
+Cloudfront Function
+*******************************************************/
+module "cloudfront-function" {
+  source = "../cloudfront-function"
+  create_cloudfront_function = var.conditional-resources["create_cloudfront_function"]
+  cloudfront-function-name   = "irsch-${var.env}-test-cloudfront-function"
+  code_path                  = file("../lib/CloudfrontFunction/function.js")
+}
 
 /******************************************************
 Lambda, SQS, CW Resources for BDRS processes

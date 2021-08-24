@@ -149,5 +149,6 @@ locals {
     create_enable_events     = var.env == "dr" ? false : true
     create_mock_resources    = contains(list("pd", "dr"), var.env) ? false : true
     create_sftp_server       = contains(list("dev2","q1", "pd"), var.env) ? true : false
+    create_cloudfront_function = contains(list("dev2"), var.env) ? true : false
   }
 }
